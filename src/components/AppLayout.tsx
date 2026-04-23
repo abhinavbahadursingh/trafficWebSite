@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 
 const titles: Record<string, string> = {
+  "/home": "Home",
   "/dashboard": "Dashboard",
   "/map": "Live Traffic Map",
   "/report": "Report Incident",

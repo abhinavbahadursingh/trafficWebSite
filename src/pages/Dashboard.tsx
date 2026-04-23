@@ -145,13 +145,13 @@ export default function Dashboard() {
       </div>
 
       <div className="grid lg:grid-cols-3 gap-4">
-        <Card className="lg:col-span-2 p-3 bg-card/60 border-border overflow-hidden flex flex-col">
+        <Card className="lg:col-span-2 p-3 bg-card/60 border-border overflow-hidden">
           <div className="flex items-center justify-between px-3 py-2">
             <p className="font-display font-semibold">Live map preview</p>
             <Link to="/map"><Button variant="ghost" size="sm">Open full map →</Button></Link>
           </div>
-          <div className="flex-1 min-h-[420px]">
-            <TrafficMap className="h-full" />
+          <div className="h-[420px]">
+            <TrafficMap />
           </div>
         </Card>
 

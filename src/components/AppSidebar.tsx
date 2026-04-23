@@ -1,4 +1,4 @@
-import { Activity, Map, AlertTriangle, ShieldCheck, BarChart3, Radio, Home, LogOut, Video, PlayCircle } from "lucide-react";
+import { Activity, Map, AlertTriangle, ShieldCheck, BarChart3, Radio, Home, LogOut, Video, PlayCircle, LayoutDashboard } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
@@ -12,7 +12,8 @@ import type { UserRole } from "@/types/traffic";
 type NavItem = { title: string; url: string; icon: typeof Home; roles: UserRole[] };
 
 const navMain: NavItem[] = [
-  { title: "Home", url: "/", icon: Home, roles: ["admin", "police", "public"] },
+  { title: "Home", url: "/home", icon: Home, roles: ["admin", "police", "public"] },
+  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard, roles: ["admin", "police", "public"] },
   { title: "Live Map", url: "/map", icon: Map, roles: ["admin", "police", "public"] },
   { title: "Live Cameras", url: "/cameras", icon: Video, roles: ["admin", "police", "public"] },
   { title: "Project Demo", url: "/demo", icon: PlayCircle, roles: ["admin", "police", "public"] },
@@ -61,17 +62,21 @@ export function AppSidebar() {
                   <SidebarMenuButton asChild>
                     <NavLink
                       to={item.url}
-                      end={item.url === "/"}
+                      end={item.url === "/home"}
                       className={({ isActive }) =>
-                        `flex items-center gap-3 rounded-md px-2 py-2 transition-colors ${
+                        `flex items-center gap-3 rounded-md px-3 py-2 transition-all duration-300 ${
                           isActive
-                            ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                            : "hover:bg-sidebar-accent/60"
+                            ? "bg-primary/20 text-primary font-bold shadow-[inset_4px_0_0_0_hsl(var(--primary)),0_0_12px_-2px_hsl(var(--primary)/0.3)]"
+                            : "text-sidebar-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground"
                         }`
                       }
                     >
-                      <item.icon className="h-4 w-4 shrink-0" />
-                      {!collapsed && <span className="truncate">{item.title}</span>}
+                      {({ isActive }) => (
+                        <>
+                          <item.icon className={`h-4 w-4 shrink-0 transition-colors ${isActive ? "text-primary" : ""}`} />
+                          {!collapsed && <span className="truncate">{item.title}</span>}
+                        </>
+                      )}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -91,15 +96,19 @@ export function AppSidebar() {
                       <NavLink
                         to={item.url}
                         className={({ isActive }) =>
-                          `flex items-center gap-3 rounded-md px-2 py-2 transition-colors ${
+                          `flex items-center gap-3 rounded-md px-3 py-2 transition-all duration-300 ${
                             isActive
-                              ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                              : "hover:bg-sidebar-accent/60"
+                              ? "bg-primary/20 text-primary font-bold shadow-[inset_4px_0_0_0_hsl(var(--primary)),0_0_12px_-2px_hsl(var(--primary)/0.3)]"
+                              : "text-sidebar-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground"
                           }`
                         }
                       >
-                        <item.icon className="h-4 w-4 shrink-0" />
-                        {!collapsed && <span className="truncate">{item.title}</span>}
+                        {({ isActive }) => (
+                          <>
+                            <item.icon className={`h-4 w-4 shrink-0 transition-colors ${isActive ? "text-primary" : ""}`} />
+                            {!collapsed && <span className="truncate">{item.title}</span>}
+                          </>
+                        )}
                       </NavLink>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

@@ -16,14 +16,13 @@ const features = [
 
 export default function Home() {
   const user = useAuth((s) => s.user);
-  if (user) return <Navigate to="/dashboard" replace />;
 
   return (
     <div className="min-h-screen bg-gradient-hero relative overflow-hidden">
       <div className="absolute inset-0 bg-glow pointer-events-none" />
 
       <header className="relative z-10 flex items-center justify-between p-5 max-w-7xl mx-auto">
-        <Link to="/" className="flex items-center gap-2">
+        <Link to="/home" className="flex items-center gap-2">
           <div className="h-9 w-9 rounded-xl bg-gradient-primary shadow-glow flex items-center justify-center">
             <Activity className="h-5 w-5 text-primary-foreground" />
           </div>
@@ -31,8 +30,18 @@ export default function Home() {
         </Link>
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <Link to="/login"><Button variant="ghost">Sign in</Button></Link>
-          <Link to="/signup"><Button className="bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-glow">Get started</Button></Link>
+          {user ? (
+            <Link to="/dashboard">
+              <Button className="bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-glow">
+                Dashboard
+              </Button>
+            </Link>
+          ) : (
+            <>
+              <Link to="/login"><Button variant="ghost">Sign in</Button></Link>
+              <Link to="/signup"><Button className="bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-glow">Get started</Button></Link>
+            </>
+          )}
         </div>
       </header>
 
@@ -50,7 +59,7 @@ export default function Home() {
           and orchestrating traffic signals across the entire city.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3 mt-10">
-          <Link to="/signup">
+          <Link to="/dashboard">
             <Button size="lg" className="bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-glow h-12 px-7">
               Launch dashboard <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
