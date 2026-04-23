@@ -31,6 +31,18 @@ function Recenter({ center }: { center: [number, number] }) {
   return null;
 }
 
+function InvalidateSize() {
+  const map = useMap();
+  useEffect(() => {
+    // Small delay to ensure container is fully rendered
+    const timer = setTimeout(() => {
+      map.invalidateSize();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [map]);
+  return null;
+}
+
 export function TrafficMap({
   height = "100%",
   showSignals = true,
@@ -61,9 +73,10 @@ export function TrafficMap({
   const incidentList: Incident[] = pendingOnly ? incidents.filter((i) => i.status === "pending") : incidents.filter((i) => i.status !== "rejected");
 
   return (
-    <div className={className} style={{ height, width: "100%" }}>
-      <MapContainer center={center} zoom={13} scrollWheelZoom className="h-full w-full rounded-xl overflow-hidden">
+    <div className={className} style={{ height, width: "100%", minHeight: height === "100%" ? "400px" : undefined }}>
+      <MapContainer center={center} zoom={13} scrollWheelZoom className="h-full w-full rounded-xl overflow-hidden z-0">
         <TileLayer url={isLight ? TILE_LIGHT : TILE_URL} attribution={TILE_ATTRIBUTION} />
+        <InvalidateSize />
         <Recenter center={center} />
         <ClickHandler onMapClick={onMapClick} />
 

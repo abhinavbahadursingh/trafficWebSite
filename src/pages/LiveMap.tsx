@@ -67,8 +67,9 @@ export default function LiveMap() {
         </div>
       </Card>
 
-      <Card className="flex-1 p-2 bg-card/60 border-border overflow-hidden">
+      <Card className="flex-1 p-2 bg-card/60 border-border overflow-hidden flex flex-col">
         <TrafficMap
+          className="flex-1"
           showSegments={showSegments}
           showIncidents={showIncidents}
           showSignals={showSignals}
