@@ -1,5 +1,5 @@
 import { Activity, Map, AlertTriangle, ShieldCheck, BarChart3, Radio, Home, LogOut, Video, PlayCircle, LayoutDashboard } from "lucide-react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
   SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarFooter, SidebarHeader, useSidebar,
@@ -31,10 +31,17 @@ export function AppSidebar() {
   const collapsed = state === "collapsed";
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  
   if (!user) return null;
 
   const visibleMain = navMain.filter((i) => i.roles.includes(user.role));
   const visibleOps = navOps.filter((i) => i.roles.includes(user.role));
+
+  const checkActive = (url: string) => {
+    if (url === "/home") return location.pathname === "/home" || location.pathname === "/";
+    return location.pathname === url || location.pathname.startsWith(url + "/");
+  };
 
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">
@@ -57,30 +64,29 @@ export function AppSidebar() {
           <SidebarGroupLabel>Operations</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {visibleMain.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <NavLink
-                      to={item.url}
-                      end={item.url === "/home"}
-                      className={({ isActive }) =>
-                        `flex items-center gap-3 rounded-md px-3 py-2 transition-all duration-300 ${
-                          isActive
-                            ? "bg-primary/20 text-primary font-bold shadow-[inset_4px_0_0_0_hsl(var(--primary)),0_0_12px_-2px_hsl(var(--primary)/0.3)]"
-                            : "text-sidebar-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground"
-                        }`
-                      }
-                    >
-                      {({ isActive }) => (
-                        <>
-                          <item.icon className={`h-4 w-4 shrink-0 transition-colors ${isActive ? "text-primary" : ""}`} />
-                          {!collapsed && <span className="truncate">{item.title}</span>}
-                        </>
-                      )}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {visibleMain.map((item) => {
+                const isActive = checkActive(item.url);
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild isActive={isActive} tooltip={collapsed ? item.title : undefined}>
+                      <NavLink
+                        to={item.url}
+                        end={item.url === "/home"}
+                        className={({ isActive: linkActive }) =>
+                          `flex items-center gap-3 rounded-md px-3 py-2 transition-all duration-300 ${
+                            linkActive
+                              ? "bg-primary/20 text-primary font-bold shadow-[inset_4px_0_0_0_hsl(var(--primary)),0_0_12px_-2px_hsl(var(--primary)/0.3)]"
+                              : "text-sidebar-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground"
+                          }`
+                        }
+                      >
+                        <item.icon className={`h-4 w-4 shrink-0 transition-colors ${isActive ? "text-primary" : ""}`} />
+                        {!collapsed && <span className="truncate">{item.title}</span>}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -90,34 +96,34 @@ export function AppSidebar() {
             <SidebarGroupLabel>Control</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {visibleOps.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <NavLink
-                        to={item.url}
-                        className={({ isActive }) =>
-                          `flex items-center gap-3 rounded-md px-3 py-2 transition-all duration-300 ${
-                            isActive
-                              ? "bg-primary/20 text-primary font-bold shadow-[inset_4px_0_0_0_hsl(var(--primary)),0_0_12px_-2px_hsl(var(--primary)/0.3)]"
-                              : "text-sidebar-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground"
-                          }`
-                        }
-                      >
-                        {({ isActive }) => (
-                          <>
-                            <item.icon className={`h-4 w-4 shrink-0 transition-colors ${isActive ? "text-primary" : ""}`} />
-                            {!collapsed && <span className="truncate">{item.title}</span>}
-                          </>
-                        )}
-                      </NavLink>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
+                {visibleOps.map((item) => {
+                  const isActive = checkActive(item.url);
+                  return (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton asChild isActive={isActive} tooltip={collapsed ? item.title : undefined}>
+                        <NavLink
+                          to={item.url}
+                          className={({ isActive: linkActive }) =>
+                            `flex items-center gap-3 rounded-md px-3 py-2 transition-all duration-300 ${
+                              linkActive
+                                ? "bg-primary/20 text-primary font-bold shadow-[inset_4px_0_0_0_hsl(var(--primary)),0_0_12px_-2px_hsl(var(--primary)/0.3)]"
+                                : "text-sidebar-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground"
+                            }`
+                          }
+                        >
+                          <item.icon className={`h-4 w-4 shrink-0 transition-colors ${isActive ? "text-primary" : ""}`} />
+                          {!collapsed && <span className="truncate">{item.title}</span>}
+                        </NavLink>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
         )}
       </SidebarContent>
+
 
       <SidebarFooter className="border-t border-sidebar-border">
         <div className="flex items-center gap-2 p-2">
